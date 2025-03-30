@@ -89,6 +89,8 @@ export const clearValidation = (
     inputElements.forEach(inputElement => {
         const popupErrorElement = getPopupErrorElement(formElement, inputElement);
         hideValidationErrors(popupErrorElement, inputElement, {inputErrorClass, errorClass});
+        
+        inputElement.setCustomValidity("");
     });
     toggleButtonStateFn(submitButtonElement, inactiveButtonClass);
 };

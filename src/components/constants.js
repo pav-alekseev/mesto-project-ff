@@ -1,11 +1,5 @@
 export const ESCAPE_KEY = 'Escape';
 
-export const commonClasses = {
-    popupIsOpened: 'popup_is-opened',
-    likeButtonActive: 'card__like-button_is-active',
-    likeCounterActive: 'card__like-counter_is-active'
-}
-
 export const validationConfig = {
     formSelector: '.popup__form',
     inputSelector: '.popup__input',

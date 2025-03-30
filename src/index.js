@@ -1,15 +1,13 @@
 import './pages/index.css';
-import {createCard} from './components/card';
+import {createCard, onCardLike} from './components/card';
 import {closePopup, openPopup} from "./components/modal";
-import {commonClasses, validationConfig} from "./components/constants";
+import {validationConfig} from "./components/constants";
 import {clearValidation, disableSubmitButton, enableSubmitButton, enableValidation} from "./components/validation";
 import {
     createNewCard,
     deleteCard,
     getCardsData,
     getUserData,
-    likeCard,
-    removeCardLike,
     updateAvatar,
     updateUserData
 } from "./components/api";
@@ -83,41 +81,6 @@ const onCardDelete = (cardId, deleteButtonElement, card) => {
     };
 };
 
-const onCardLike = (cardId, buttonElement, counterElement) => {
-    buttonElement.disabled = true;
-
-    if (buttonElement.classList.contains(commonClasses.likeButtonActive)) {
-        removeCardLike(cardId)
-            .then(({likes}) => {
-                buttonElement.classList.remove(commonClasses.likeButtonActive);
-
-                if (likes.length) {
-                    counterElement.classList.add(commonClasses.likeCounterActive);
-                    counterElement.textContent = likes.length;
-                } else {
-                    counterElement.classList.remove(commonClasses.likeCounterActive);
-                    counterElement.textContent = '';
-                }
-            })
-            .catch((error) => console.error(error))
-            .finally(() => {
-                buttonElement.disabled = false;
-            });
-    } else {
-        likeCard(cardId)
-            .then(({likes}) => {
-                buttonElement.classList.add(commonClasses.likeButtonActive);
-
-                counterElement.classList.add(commonClasses.likeCounterActive);
-                counterElement.textContent = likes.length;
-            })
-            .catch((error) => console.error(error))
-            .finally(() => {
-                buttonElement.disabled = false;
-            });
-    }
-};
-
 export const onOpenCardImage = (link, name) => {
     popupCardImage.src = link;
     popupCardImage.alt = name;
@@ -151,11 +114,10 @@ const onNewPlaceFormSubmit = event => {
             const currentUserId = newCard.owner['_id'];
             const card = createCard(currentUserId, cardItem, newCard, onCardDelete, onCardLike, onOpenCardImage);
             cardList.prepend(card);
+            closePopup();
         })
         .catch((error) => console.error(error))
         .finally(() => toggleSubmitButtonLoadingState(false, newPlaceSubmitButton));
-
-    closePopup();
 }
 
 const onUpdateAvatarFormSubmit = event => {
